@@ -9,7 +9,7 @@ dependencies:
   moe_flutter_crm:
     git:
       url: https://github.com/mindofemanizer/MOE-Flutter-CRM.git
-      ref: master
+      ref: main
 ```
 
 ## Usage
