@@ -45,8 +45,8 @@ class ContactModel extends Equatable {
     this.leadScore = 0,
     required this.createdAt,
     required this.updatedAt,
-  }) : assert email.isNotEmpty,
-       assert phone.isNotEmpty;
+  }) : assert(email != ''),
+       assert(phone != '');
 
   factory ContactModel.fromJson(Map<String, dynamic> json) {
     return ContactModel(

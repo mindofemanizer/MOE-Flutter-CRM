@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:moe_flutter_crm/src/models/interaction_type.dart';
+
 /// Customer interaction record.
 class InteractionModel extends Equatable {
   final String id;

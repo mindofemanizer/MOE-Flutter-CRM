@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:moe_flutter_core/moe_flutter_core.dart';
-import 'package:moe_flutter_crm/src/config/crm_config.dart';
 import 'package:moe_flutter_crm/src/models/contact_model.dart';
 import 'package:moe_flutter_crm/src/services/crm_repository.dart';
 
@@ -10,9 +9,13 @@ sealed class ContactsState {
   const ContactsState();
 }
 
-final class ContactsInitial extends ContactsState {}
+final class ContactsInitial extends ContactsState {
+  const ContactsInitial();
+}
 
-final class ContactsLoading extends ContactsState {}
+final class ContactsLoading extends ContactsState {
+  const ContactsLoading();
+}
 
 final class ContactsLoaded extends ContactsState {
   final List<ContactModel> contacts;
@@ -30,10 +33,7 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
 
   ContactsNotifier(this._repository) : super(const ContactsInitial());
 
-  Future<void> loadContacts({
-    String? search,
-    CustomerSegment? segment,
-  }) async {
+  Future<void> loadContacts({String? search, CustomerSegment? segment}) async {
     state = const ContactsLoading();
 
     final result = await _repository.listContacts(
@@ -72,10 +72,11 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
       notes: notes,
     );
 
-    if (result is Ok && state is ContactsLoaded) {
+    if (result case Ok(:final data)) {
+      if (state is! ContactsLoaded) return result;
       final loaded = state as ContactsLoaded;
       // Add to beginning (newest first)
-      state = ContactsLoaded([result.data, ...loaded.contacts]);
+      state = ContactsLoaded([data, ...loaded.contacts]);
     }
 
     return result;
@@ -88,6 +89,6 @@ final crmRepositoryProvider = Provider<CrmRepository>((ref) {
 });
 
 /// Provider for ContactsNotifier.
-final contactsProvider = StateNotifierProviderFactory<ContactsNotifier>(
+final contactsProvider = StateNotifierProvider<ContactsNotifier, ContactsState>(
   (ref) => ContactsNotifier(ref.watch(crmRepositoryProvider)),
 );

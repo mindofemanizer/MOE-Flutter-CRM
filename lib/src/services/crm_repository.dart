@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:moe_flutter_core/moe_flutter_core.dart';
 import 'package:moe_flutter_crm/src/config/crm_config.dart';
@@ -9,9 +8,8 @@ import 'package:moe_flutter_crm/src/models/interaction_model.dart';
 /// Repository for CRM operations.
 class CrmRepository {
   final Dio _dio;
-  final MoeCrmConfig _config;
 
-  CrmRepository(this._dio, this._config);
+  CrmRepository(this._dio, MoeCrmConfig _);
 
   // ── Contacts ───────────────────────────────────────────────
 
@@ -29,7 +27,8 @@ class CrmRepository {
         'limit': limit,
         if (search != null) 'search': search,
         if (segment != null) 'segment': segment.code,
-        if (createdAfter != null) 'created_after': createdAfter.toIso8601String(),
+        if (createdAfter != null)
+          'created_after': createdAfter.toIso8601String(),
       };
       final response = await _dio.get('/contacts', queryParameters: params);
       final data = response.data as Map<String, dynamic>;
@@ -41,10 +40,7 @@ class CrmRepository {
     } on DioException catch (e) {
       return Err(mapDioErrorToFailure(e));
     } catch (e) {
-      return Err(AppFailure(
-        type: FailureType.unknown,
-        message: e.toString(),
-      ));
+      return Err(AppFailure(type: FailureType.unknown, message: e.toString()));
     }
   }
 
@@ -56,10 +52,7 @@ class CrmRepository {
     } on DioException catch (e) {
       return Err(mapDioErrorToFailure(e));
     } catch (e) {
-      return Err(AppFailure(
-        type: FailureType.unknown,
-        message: e.toString(),
-      ));
+      return Err(AppFailure(type: FailureType.unknown, message: e.toString()));
     }
   }
 
@@ -76,30 +69,31 @@ class CrmRepository {
     String? notes,
   }) async {
     try {
-      final response = await _dio.post('/contacts', data: {
-        'first_name': firstName,
-        'last_name': lastName,
-        'email': email,
-        'phone': phone,
-        'segment': segment.code,
-        if (company != null) 'company': company,
-        if (jobTitle != null) 'job_title': jobTitle,
-        'lead_score': leadScore,
-        if (notes != null) 'notes': notes,
-      });
+      final response = await _dio.post(
+        '/contacts',
+        data: {
+          'first_name': firstName,
+          'last_name': lastName,
+          'email': email,
+          'phone': phone,
+          'segment': segment.code,
+          if (company != null) 'company': company,
+          if (jobTitle != null) 'job_title': jobTitle,
+          'lead_score': leadScore,
+          if (notes != null) 'notes': notes,
+        },
+      );
       return Ok(ContactModel.fromJson(response.data as Map<String, dynamic>));
     } on DioException catch (e) {
       return Err(mapDioErrorToFailure(e));
     } catch (e) {
-      return Err(AppFailure(
-        type: FailureType.unknown,
-        message: e.toString(),
-      ));
+      return Err(AppFailure(type: FailureType.unknown, message: e.toString()));
     }
   }
 
   /// Update contact.
-  Future<AppResult<void>> updateContact(String id, {
+  Future<AppResult<void>> updateContact(
+    String id, {
     String? firstName,
     String? lastName,
     String? email,
@@ -110,24 +104,24 @@ class CrmRepository {
     String? notes,
   }) async {
     try {
-      await _dio.patch('/contacts/$id', data: {
-        if (firstName != null) 'first_name': firstName,
-        if (lastName != null) 'last_name': lastName,
-        if (email != null) 'email': email,
-        if (phone != null) 'phone': phone,
-        if (company != null) 'company': company,
-        if (jobTitle != null) 'job_title': jobTitle,
-        if (leadScore != null) 'lead_score': leadScore,
-        if (notes != null) 'notes': notes,
-      });
+      await _dio.patch(
+        '/contacts/$id',
+        data: {
+          if (firstName != null) 'first_name': firstName,
+          if (lastName != null) 'last_name': lastName,
+          if (email != null) 'email': email,
+          if (phone != null) 'phone': phone,
+          if (company != null) 'company': company,
+          if (jobTitle != null) 'job_title': jobTitle,
+          if (leadScore != null) 'lead_score': leadScore,
+          if (notes != null) 'notes': notes,
+        },
+      );
       return const Ok(null);
     } on DioException catch (e) {
       return Err(mapDioErrorToFailure(e));
     } catch (e) {
-      return Err(AppFailure(
-        type: FailureType.unknown,
-        message: e.toString(),
-      ));
+      return Err(AppFailure(type: FailureType.unknown, message: e.toString()));
     }
   }
 
@@ -142,26 +136,30 @@ class CrmRepository {
     DateTime? occurredAt,
   }) async {
     try {
-      final response = await _dio.post('/interactions', data: {
-        'contact_id': contactId,
-        'type': type,
-        'subject': subject,
-        if (notes != null) 'notes': notes,
-        if (occurredAt != null) 'occurred_at': occurredAt.toIso8601String(),
-      });
-      return Ok(InteractionModel.fromJson(response.data as Map<String, dynamic>));
+      final response = await _dio.post(
+        '/interactions',
+        data: {
+          'contact_id': contactId,
+          'type': type,
+          'subject': subject,
+          if (notes != null) 'notes': notes,
+          if (occurredAt != null) 'occurred_at': occurredAt.toIso8601String(),
+        },
+      );
+      return Ok(
+        InteractionModel.fromJson(response.data as Map<String, dynamic>),
+      );
     } on DioException catch (e) {
       return Err(mapDioErrorToFailure(e));
     } catch (e) {
-      return Err(AppFailure(
-        type: FailureType.unknown,
-        message: e.toString(),
-      ));
+      return Err(AppFailure(type: FailureType.unknown, message: e.toString()));
     }
   }
 
   /// List interactions for contact.
-  Future<AppResult<List<InteractionModel>>> listInteractions(String contactId) async {
+  Future<AppResult<List<InteractionModel>>> listInteractions(
+    String contactId,
+  ) async {
     try {
       final response = await _dio.get('/contacts/$contactId/interactions');
       final data = response.data as List<dynamic>;
@@ -173,10 +171,7 @@ class CrmRepository {
     } on DioException catch (e) {
       return Err(mapDioErrorToFailure(e));
     } catch (e) {
-      return Err(AppFailure(
-        type: FailureType.unknown,
-        message: e.toString(),
-      ));
+      return Err(AppFailure(type: FailureType.unknown, message: e.toString()));
     }
   }
 }
