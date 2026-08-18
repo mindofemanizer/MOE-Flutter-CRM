@@ -1,6 +1,6 @@
 # MOE-Flutter-CRM
 
-CRM package for MOE Flutter ecosystem — customer management, interactions.
+CRM package for MOE Flutter ecosystem â€” customer management, interactions.
 
 ## Installation
 
@@ -9,7 +9,7 @@ dependencies:
   moe_flutter_crm:
     git:
       url: https://github.com/mindofemanizer/MOE-Flutter-CRM.git
-      ref: master
+      ref: v1.0.0
 ```
 
 ## Usage
