@@ -1,4 +1,5 @@
 /// Barrel file — public API for moe_flutter_crm.
+library;
 export 'src/config/crm_config.dart';
 export 'src/models/contact_model.dart';
 export 'src/models/interaction_type.dart';

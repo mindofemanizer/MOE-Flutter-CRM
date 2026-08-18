@@ -25,7 +25,7 @@ class CrmRepository {
       final params = <String, dynamic>{
         'page': page,
         'limit': limit,
-        if (search != null) 'search': search,
+        'search': ?search,
         if (segment != null) 'segment': segment.code,
         if (createdAfter != null)
           'created_after': createdAfter.toIso8601String(),
@@ -77,10 +77,10 @@ class CrmRepository {
           'email': email,
           'phone': phone,
           'segment': segment.code,
-          if (company != null) 'company': company,
-          if (jobTitle != null) 'job_title': jobTitle,
+          'company': ?company,
+          'job_title': ?jobTitle,
           'lead_score': leadScore,
-          if (notes != null) 'notes': notes,
+          'notes': ?notes,
         },
       );
       return Ok(ContactModel.fromJson(response.data as Map<String, dynamic>));
@@ -107,14 +107,14 @@ class CrmRepository {
       await _dio.patch(
         '/contacts/$id',
         data: {
-          if (firstName != null) 'first_name': firstName,
-          if (lastName != null) 'last_name': lastName,
-          if (email != null) 'email': email,
-          if (phone != null) 'phone': phone,
-          if (company != null) 'company': company,
-          if (jobTitle != null) 'job_title': jobTitle,
-          if (leadScore != null) 'lead_score': leadScore,
-          if (notes != null) 'notes': notes,
+          'first_name': ?firstName,
+          'last_name': ?lastName,
+          'email': ?email,
+          'phone': ?phone,
+          'company': ?company,
+          'job_title': ?jobTitle,
+          'lead_score': ?leadScore,
+          'notes': ?notes,
         },
       );
       return const Ok(null);
@@ -142,7 +142,7 @@ class CrmRepository {
           'contact_id': contactId,
           'type': type,
           'subject': subject,
-          if (notes != null) 'notes': notes,
+          'notes': ?notes,
           if (occurredAt != null) 'occurred_at': occurredAt.toIso8601String(),
         },
       );
